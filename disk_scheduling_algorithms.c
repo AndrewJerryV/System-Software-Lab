@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 void fcfs(int requests[], int n, int head) {
     int total_movement = 0;
     printf("\nFCFS Disk Scheduling Steps:\n");
