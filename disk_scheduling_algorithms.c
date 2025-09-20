@@ -91,26 +91,19 @@ void c_scan(int requests[], int n, int head, int disk_size) {
     
     printf("\nC-SCAN Disk Scheduling Steps:\n");
     for (int i = pos; i < n; i++) {
-        int movement = abs(sorted[i] - head);
-        if (movement > 0) {
-            printf("Head moves from %d to %d, movement = %d\n", head, sorted[i], movement);
-            total_movement += movement;
-            head = sorted[i];
-        }
+        printf("Head moves from %d to %d, movement = %d\n", head, sorted[i], movement);
+        total_movement += movement;
+        head = sorted[i];
     }
 
-    int jump_movement = abs(sorted[0] - 0);
     printf("Head moves from %d to %d (wrap-around), movement = %d\n", head, 0, abs(0-head));
     total_movement += abs(0-head);
     head = 0;
 
     for (int i = 0; i < pos; i++) {
-        int movement = abs(sorted[i] - head);
-        if (movement > 0) { 
-            printf("Head moves from %d to %d, movement = %d\n", head, sorted[i], movement);
-            total_movement += movement;
-            head = sorted[i];
-        }
+        printf("Head moves from %d to %d, movement = %d\n", head, sorted[i], movement);
+        total_movement += movement;
+        head = sorted[i];
     }
 
     printf("Total Head Movement (C-SCAN): %d\n", total_movement);
