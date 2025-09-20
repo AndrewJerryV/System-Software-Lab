@@ -34,15 +34,12 @@ int main() {
     }
     printf("\n");
 
-    for (int i = 0; i < numProcesses; i++) {
-        for (int j = 0; j < numResources; j++) 
-            need[i][j] = maximum[i][j] - allocation[i][j];
-    }
-
     printf("Need Matrix:\n");
     for (int i = 0; i < numProcesses; i++) {
-        for (int j = 0; j < numResources; j++) 
+        for (int j = 0; j < numResources; j++) {
+            need[i][j] = maximum[i][j] - allocation[i][j];
             printf("%d ", need[i][j]);
+        }
         printf("\n");
     }
     printf("\n");
