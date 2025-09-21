@@ -24,7 +24,8 @@ int main() {
             fprintf(f3, "\t%s\t%s\t%s", lab, opcode, opa);
             sscanf(opa, "%x", &locctr);
             start = locctr;
-        } else {
+        } 
+		else {
             rewind(f2);
             x = 0;
             while (fscanf(f2, "%s %s", opcode1, opa1) != EOF) {
@@ -80,14 +81,16 @@ int main() {
     printf("\n--- output.txt ---\n");
     f3 = fopen("output.txt", "r");
     if (f3) {
-        while (fgets(s, sizeof(s), f3) != NULL) printf("%s", s);
+        while (fgets(s, sizeof(s), f3) != NULL) 
+			printf("%s", s);
         fclose(f3);
     }
 
     printf("\n\n--- symtab.txt ---\n");
     f4 = fopen("symtab.txt", "r");
     if (f4) {
-        while (fgets(s, sizeof(s), f4) != NULL) printf("%s", s);
+        while (fgets(s, sizeof(s), f4) != NULL) 
+			printf("%s", s);
         fclose(f4);
     }
 	printf("\n\n--- Object code ---\n");
