@@ -1,0 +1,158 @@
+DECLARE
+  n NUMBER := &input_number;
+BEGIN
+  IF MOD(n, 2) = 0 THEN
+    DBMS_OUTPUT.PUT_LINE(n || ' is Even');
+  ELSE
+    DBMS_OUTPUT.PUT_LINE(n || ' is Odd');
+  END IF;
+END;
+/
+
+
+DECLARE
+  n        NUMBER := &input_number;
+  i        NUMBER;
+  is_prime BOOLEAN := TRUE;
+BEGIN
+  IF n <= 1 THEN
+    is_prime := FALSE;
+  ELSE
+    FOR i IN 2 .. TRUNC(SQRT(n)) LOOP
+      IF MOD(n, i) = 0 THEN
+        is_prime := FALSE;
+        EXIT;
+      END IF;
+    END LOOP;
+  END IF;
+
+  IF is_prime THEN
+    DBMS_OUTPUT.PUT_LINE(n || ' is Prime');
+  ELSE
+    DBMS_OUTPUT.PUT_LINE(n || ' is NOT Prime');
+  END IF;
+END;
+/
+
+
+DECLARE
+  n     NUMBER := &input_number;
+  fact  NUMBER := 1;
+  i     NUMBER;
+BEGIN
+  IF n < 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Factorial not defined for negative numbers');
+  ELSE
+    FOR i IN 1 .. n LOOP
+      fact := fact * i;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('Factorial of ' || n || ' is: ' || fact);
+  END IF;
+END;
+/
+
+
+DECLARE
+  n       NUMBER := &input_number;
+  sum_div NUMBER := 0;
+  i       NUMBER;
+BEGIN
+  IF n <= 1 THEN
+    DBMS_OUTPUT.PUT_LINE(n || ' is NOT a perfect number');
+  ELSE
+    FOR i IN 1 .. n/2 LOOP
+      IF MOD(n, i) = 0 THEN
+        sum_div := sum_div + i;
+      END IF;
+    END LOOP;
+
+    IF sum_div = n THEN
+      DBMS_OUTPUT.PUT_LINE(n || ' is a Perfect number');
+    ELSE
+      DBMS_OUTPUT.PUT_LINE(n || ' is NOT a Perfect number');
+    END IF;
+  END IF;
+END;
+/
+
+
+
+DECLARE
+  n       NUMBER := &num_terms;        -- how many terms you want
+  a       NUMBER := 0;
+  b       NUMBER := 1;
+  c       NUMBER;
+  i       NUMBER;
+BEGIN
+  IF n <= 0 THEN
+    DBMS_OUTPUT.PUT_LINE('Please enter a positive number of terms');
+  ELSIF n = 1 THEN
+    DBMS_OUTPUT.PUT_LINE('Fibonacci series: ' || a);
+  ELSE
+    DBMS_OUTPUT.PUT_LINE('Fibonacci series:');
+    DBMS_OUTPUT.PUT_LINE(a);
+    DBMS_OUTPUT.PUT_LINE(b);
+    FOR i IN 3 .. n LOOP
+      c := a + b;
+      DBMS_OUTPUT.PUT_LINE(c);
+      a := b;
+      b := c;
+    END LOOP;
+  END IF;
+END;
+/
+
+
+
+
+DECLARE
+  x  NUMBER := &num1;
+  y  NUMBER := &num2;
+  op CHAR := '&operator';
+  result NUMBER;
+BEGIN
+  CASE op
+    WHEN '+' THEN
+      result := x + y;
+    WHEN '-' THEN
+      result := x - y;
+    WHEN '*' THEN
+      result := x * y;
+    WHEN '/' THEN
+      IF y = 0 THEN
+        DBMS_OUTPUT.PUT_LINE('Division by zero error');
+        RETURN;
+      ELSE
+        result := x / y;
+      END IF;
+    ELSE
+      DBMS_OUTPUT.PUT_LINE('Invalid operator');
+      RETURN;
+  END CASE;
+
+  DBMS_OUTPUT.PUT_LINE('Result of ' || x || ' ' || op || ' ' || y || ' = ' || result);
+END;
+/
+
+
+
+DECLARE
+  str       VARCHAR2(100) := '&input_string';
+  len       PLS_INTEGER := LENGTH(str);
+  i         PLS_INTEGER;
+  is_pal     BOOLEAN := TRUE;
+BEGIN
+  FOR i IN 1 .. len/2 LOOP
+    IF SUBSTR(str, i, 1) != SUBSTR(str, len - i + 1, 1) THEN
+      is_pal := FALSE;
+      EXIT;
+    END IF;
+  END LOOP;
+
+  IF is_pal THEN
+    DBMS_OUTPUT.PUT_LINE(str || ' is Palindrome');
+  ELSE
+    DBMS_OUTPUT.PUT_LINE(str || ' is NOT Palindrome');
+  END IF;
+END;
+/
