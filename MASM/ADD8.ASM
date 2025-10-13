@@ -34,7 +34,7 @@ START:
     GETDCM
     
     ADD AL, BL
-    MOV AH, 00H ; Corrected from 'ODH' in the doc
+    MOV AH, 00H
     AAA
     MOV BX, AX
 
