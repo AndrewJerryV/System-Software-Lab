@@ -1,0 +1,33 @@
+DROP TABLE EMPLOYEE3 CASCADE CONSTRAINTS;
+DROP TABLE INCREMENT2 CASCADE CONSTRAINTS;
+CREATE TABLE EMPLOYEE3 (
+    empid NUMBER PRIMARY KEY,
+    empname VARCHAR2(50),
+    salary NUMBER
+);
+CREATE TABLE INCREMENT2 (
+    empid NUMBER,
+    incr NUMBER
+);
+INSERT INTO EMPLOYEE3 VALUES (301, 'Gokul', 20000);
+INSERT INTO EMPLOYEE3 VALUES (302, 'Hari', 30000);
+COMMIT;
+
+CREATE OR REPLACE TRIGGER salary_increment_trigger
+AFTER UPDATE OF salary ON EMPLOYEE3
+FOR EACH ROW
+DECLARE
+    v_diff NUMBER;
+BEGIN
+    v_diff := :NEW.salary - :OLD.salary;
+    IF v_diff > 1000 THEN
+        INSERT INTO INCREMENT2(empid, incr)
+        VALUES (:OLD.empid, v_diff);
+        DBMS_OUTPUT.PUT_LINE('Increment record inserted for EmpID: ' || :OLD.empid || ', Increment: ' || v_diff);
+    END IF;
+END;
+/
+
+UPDATE EMPLOYEE3 SET salary = 22000 WHERE empid = 301;
+UPDATE EMPLOYEE3 SET salary = 30500 WHERE empid = 302;
+SELECT * FROM INCREMENT;
