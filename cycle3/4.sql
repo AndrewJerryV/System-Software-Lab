@@ -1,11 +1,11 @@
 DROP TABLE EMPLOYEE3 CASCADE CONSTRAINTS;
-DROP TABLE INCREMENT2 CASCADE CONSTRAINTS;
+DROP TABLE INCREMENT1 CASCADE CONSTRAINTS;
 CREATE TABLE EMPLOYEE3 (
     empid NUMBER PRIMARY KEY,
     empname VARCHAR2(50),
     salary NUMBER
 );
-CREATE TABLE INCREMENT2 (
+CREATE TABLE INCREMENT1 (
     empid NUMBER,
     incr NUMBER
 );
@@ -21,7 +21,7 @@ DECLARE
 BEGIN
     v_diff := :NEW.salary - :OLD.salary;
     IF v_diff > 1000 THEN
-        INSERT INTO INCREMENT2(empid, incr)
+        INSERT INTO INCREMENT1(empid, incr)
         VALUES (:OLD.empid, v_diff);
         DBMS_OUTPUT.PUT_LINE('Increment record inserted for EmpID: ' || :OLD.empid || ', Increment: ' || v_diff);
     END IF;
@@ -30,4 +30,4 @@ END;
 
 UPDATE EMPLOYEE3 SET salary = 22000 WHERE empid = 301;
 UPDATE EMPLOYEE3 SET salary = 30500 WHERE empid = 302;
-SELECT * FROM INCREMENT;
+SELECT * FROM INCREMENT1;
