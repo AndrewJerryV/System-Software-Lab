@@ -72,7 +72,6 @@ CHKA:
     PUSH CX
     MOV CX, 10
     REPNZ SCASB
-    ; BUG FIX 1: Check the JNE *before* restoring flags
     JNE CHKD_NO_VOWEL
     POP CX
     POPF
@@ -89,7 +88,6 @@ CHKD:
     PUSH CX
     MOV CX, 10
     REPNZ SCASB
-    ; BUG FIX 1: Check the JNE *before* restoring flags
     JNE CHKC_NO_DIGIT
     POP CX
     POPF
@@ -100,9 +98,8 @@ CHKC_NO_DIGIT:
     POPF
 
 CHKC:
-    ; BUG FIX 2: Add a check to ignore spaces
     CMP AL, ' '
-    JE ENDC ; If it's a space, skip to the next character
+    JE ENDC
     INC CNCNT
 
 ENDC:
@@ -120,4 +117,5 @@ DISPLAY_RESULTS:
     MOV AH, 4CH
     INT 21H
 CODE ENDS
+
 END START
