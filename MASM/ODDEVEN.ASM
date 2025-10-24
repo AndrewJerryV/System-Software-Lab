@@ -28,6 +28,7 @@ START:
 
     PRTMSG M1
     GETDCM
+    GETDCM ; for two digit numbers
 
     SHR AL, 01  
     JC ODD      
@@ -42,4 +43,5 @@ DONE:
     MOV AH, 4CH
     INT 21H
 CODE ENDS
+
 END START
