@@ -1,22 +1,17 @@
-; DATA SEGMENT
+ASSUME CS:CODE, DS:DATA, ES:DATA ; ES now points to DATA
 DATA SEGMENT
-    M1 DB 10,13,"ENTER STRING(DELIMITER: '`'): $"
-    M2 DB 10,13,"NUMBER OF VOWELS: $"
-    M3 DB 10,13,"NUMBER OF DIGITS: $"
-    M4 DB 10,13,"NUMBER OF CONSONANTS: $"
+    M1    DB 10,13,"ENTER STRING(DELIMITER: '`'): $"
+    M2    DB 10,13,"NUMBER OF VOWELS: $"
+    M3    DB 10,13,"NUMBER OF DIGITS: $"
+    M4    DB 10,13,"NUMBER OF CONSONANTS: $"
     INSTR DB 20 DUP(0)
-    MAXLEN DB 20
     DELIM DB '`'
-    VCNT DB 00H
+    VCNT  DB 00H
     DGCNT DB 00H
     CNCNT DB 00H
+    VWSTR DB "aeiouAEIOU" ; Moved from EXTRA
+    DGSTR DB "0123456789" ; Moved from EXTRA
 DATA ENDS
-
-; EXTRA SEGMENT
-EXTRA SEGMENT
-    VWSTR DB "aeiouAEIOU"
-    DGSTR DB "0123456789"
-EXTRA ENDS
 
 ; MACRO TO PRINT A MESSAGE
 PRTMSG MACRO MESSAGE
@@ -33,78 +28,62 @@ PRTCNT MACRO COUNT
     INT 21H
 ENDM
 
-; CODE SEGMENT
 CODE SEGMENT
-    ASSUME CS:CODE, DS:DATA, ES:EXTRA
 START:
     MOV AX, DATA
     MOV DS, AX
-    MOV AX, EXTRA
-    MOV ES, AX
+    MOV ES, AX          
 
-    LEA SI, INSTR
     PRTMSG M1
-    MOV BX, 00
-    MOV CH, 00H
-    MOV CL, MAXLEN
+    LEA DI, INSTR
+    XOR CX, CX          
     MOV AH, 01H
 GETC:
     INT 21H
     CMP AL, DELIM
-    JE ENDGET
-    INC BL
-    MOV [SI], AL
-    INC SI
-    LOOP GETC
+    JE PROCESS_STRING
+    MOV [DI], AL
+    INC DI
+    INC CX
+    CMP CX, 20          
+    JNE GETC
 
-ENDGET:
+PROCESS_STRING:
     CLD
     LEA SI, INSTR
-    MOV CH, 00H
-    MOV CL, BL
-    JCXZ DISPLAY_RESULTS
+    JCXZ DISPLAY_RESULTS 
 CHKA:
-    MOV AL, [SI]
+    LODSB               
 
     ; Check for Vowel
     LEA DI, VWSTR
-    PUSHF
-    PUSH CX
-    MOV CX, 10
+    PUSH CX             
+    MOV CX, 10          
     REPNZ SCASB
-    JNE CHKD_NO_VOWEL
-    POP CX
-    POPF
+    POP CX              
+    JNE CHKD            
     INC VCNT
-    JMP ENDC
-CHKD_NO_VOWEL:
-    POP CX
-    POPF
+    JMP ENDC            
 
 CHKD:
     ; Check for Digit
     LEA DI, DGSTR
-    PUSHF
     PUSH CX
-    MOV CX, 10
+    MOV CX, 10          
     REPNZ SCASB
-    JNE CHKC_NO_DIGIT
     POP CX
-    POPF
+    JNE CHKC            
     INC DGCNT
     JMP ENDC
-CHKC_NO_DIGIT:
-    POP CX
-    POPF
 
 CHKC:
+    ; Check for Consonant
     CMP AL, ' '
-    JE ENDC
+    JE ENDC             
     INC CNCNT
 
 ENDC:
-    INC SI
-    LOOP CHKA
+    LOOP CHKA           
 
 DISPLAY_RESULTS:
     PRTMSG M2
@@ -117,5 +96,4 @@ DISPLAY_RESULTS:
     MOV AH, 4CH
     INT 21H
 CODE ENDS
-
 END START
