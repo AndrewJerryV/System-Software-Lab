@@ -108,7 +108,7 @@ END;
 DECLARE
   x  NUMBER := &num1;
   y  NUMBER := &num2;
-  op CHAR := '&operator';
+  op CHAR := &operator;
   result NUMBER;
 BEGIN
   CASE op
