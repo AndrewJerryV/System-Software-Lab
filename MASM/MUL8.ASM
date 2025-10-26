@@ -37,15 +37,16 @@ START:
     PRTMSG M3
 
     MOV DL, BH
-    OR DL, 30H
+    ADD DL, 30H
     MOV AH, 02H
     INT 21H
 
     MOV DL, BL
-    OR DL, 30H
+    ADD DL, 30H
     INT 21H
 
     MOV AH, 4CH
     INT 21H
 CODE ENDS
+
 END START
