@@ -1,72 +1,86 @@
-ASSUME CS:CODE, DS:DATA
+ASSUME DS:DATA, CS:CODE
 DATA SEGMENT
-    M1 DB 10,13,"ENTER FIRST NO.: $"
-    M2 DB 10,13,"ENTER SECOND NO.: $"
+    M1 DB 10,13,"ENTER FIRST NUMBER: $"
+    M2 DB 10,13,"ENTER SECOND NUMBER: $"
     M3 DB 10,13,"DIFFERENCE: $"
-    DIFF DB 2 DUP(0) 
+    M4 DB "-$"
+    PROD DB 2 DUP(0)
 DATA ENDS
 
-; MACRO TO PRINT A MESSAGE
-PRTMSG MACRO MESSAGE
-    LEA DX, MESSAGE
-    MOV AH, 09H
+PRTMSG MACRO MSG
+    LEA DX,MSG
+    MOV AH,09H
     INT 21H
 ENDM
-
-; MACRO TO GET A DECIMAL DIGIT
 GETDCM MACRO
-    MOV AH, 01H
+    MOV AH,01H
     INT 21H
-    SUB AL, 30H 
+    SUB AL,30H
 ENDM
 
-; MACRO TO PRINT A DECIMAL DIGIT FROM MEMORY
 PRTDCM MACRO
-    MOV DL, [SI] 
-    ADD DL, 30H  
-    MOV AH, 02H
+    MOV DL,[SI]
+    ADD DL,30H
+    MOV AH,02H
     INT 21H
 ENDM
 
 CODE SEGMENT
 START:
-    MOV AX, DATA
-    MOV DS, AX
+    MOV AX,DATA
+    MOV DS,AX
 
     PRTMSG M1
-    GETDCM          
-    MOV BH, AL      
-    GETDCM          
-    MOV BL, AL      
+    GETDCM
+    MOV BH,AL
+    GETDCM
+    MOV BL,AL
+    MOV AL,10
+    MUL BH
+    ADD AL,BL
+    MOV BL,AL
 
     PRTMSG M2
-    GETDCM          
-    MOV CH, AL      
-    GETDCM          
-    MOV CL, AL      
-
-    MOV AL, BL      
-    SUB AL, CL      
-    MOV AH, 00H     
-    AAS             
-    
-    LEA SI, DIFF    
-    MOV [SI], AL    
-
-    MOV AL, BH      
-    ADD AL, AH      
-    SUB AL, CH      
-    MOV AH, 00H     
-    AAS             
-    
-    INC SI          
-    MOV [SI], AL    
+    GETDCM
+    MOV CH,AL
+    GETDCM
+    MOV CL,AL
+    MOV AL,10
+    MUL CH
+    ADD AL,CL
+    MOV CL,AL
 
     PRTMSG M3
-    PRTDCM          
-    DEC SI          
-    PRTDCM          
-    MOV AH, 4CH
+    MOV AH,00H
+
+    MOV AL,BL
+    CMP AL,CL
+    JNB IS_POS;
+    PRTMSG M4
+    MOV AH,00H
+    XCHG BL,CL
+    MOV AL,BL
+
+IS_POS:
+    SUB AL,CL
+
+    LEA SI,PROD
+    ADD SI,1
+    MOV CX,2
+    MOV BX,10
+
+CONVERT_LOOP:
+    MOV DX,0
+    DIV BX
+    MOV [SI],DL
+    DEC SI
+    LOOP CONVERT_LOOP
+    
+    LEA SI,PROD
+    PRTDCM
+    INC SI
+    PRTDCM
+    MOV AH,4CH
     INT 21H
 CODE ENDS
 END START
